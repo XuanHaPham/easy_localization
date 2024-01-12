@@ -110,6 +110,14 @@ class EasyLocalization extends StatefulWidget {
 
   /// Customizable logger
   static EasyLogger logger = EasyLogger(name: '🌎 Easy Localization');
+
+  ///
+  static Future<void> loadLocaleTranslationsMaData(
+    Map<Locale, Map<String, dynamic>> localeTranslationsMap,
+  ) async =>
+      Localization.updateLocaleTranslationsMap(
+        localeDataMap: localeTranslationsMap,
+      );
 }
 
 class _EasyLocalizationState extends State<EasyLocalization> {
@@ -260,9 +268,11 @@ class _EasyLocalizationDelegate extends LocalizationsDelegate<Localization> {
       await localizationController!.loadTranslations();
     }
 
-    Localization.load(value,
-        translations: localizationController!.translations,
-        fallbackTranslations: localizationController!.fallbackTranslations);
+    Localization.load(
+      value,
+      translations: localizationController!.translations,
+      fallbackTranslations: localizationController!.fallbackTranslations,
+    );
     return Future.value(Localization.instance);
   }
 

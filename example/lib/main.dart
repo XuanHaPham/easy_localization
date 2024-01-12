@@ -82,7 +82,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(LocaleKeys.title).tr(),
+        title: Text(LocaleKeys.title).tr(
+          context: context,
+        ),
         actions: <Widget>[
           TextButton(
             onPressed: () {
@@ -112,9 +114,17 @@ class _MyHomePageState extends State<MyHomePage> {
                   color: Colors.grey.shade600,
                   fontSize: 19,
                   fontWeight: FontWeight.bold),
-            ).tr(args: ['aissat'], gender: _gender ? 'female' : 'male'),
+            ).tr(
+              args: ['aissat'],
+              gender: _gender ? 'female' : 'male',
+              context: context,
+            ),
             Text(
-              tr(LocaleKeys.gender, gender: _gender ? 'female' : 'male'),
+              tr(
+                LocaleKeys.gender,
+                gender: _gender ? 'female' : 'male',
+                context: context,
+              ),
               style: TextStyle(
                   color: Colors.grey.shade600,
                   fontSize: 15,
@@ -157,9 +167,86 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ElevatedButton(
               onPressed: () {
-                context.resetLocale();
+                if (context.locale == Locale('ar', 'DZ')) {
+                  context.setLocale(
+                    Locale('en', 'US'),
+                  );
+                } else {
+                  context.setLocale(
+                    Locale('ar', 'DZ'),
+                  );
+                }
               },
               child: Text(LocaleKeys.reset_locale).tr(),
+            ),
+            Localizations.override(
+              context: context,
+              locale: Locale('de', 'DE'),
+              // Using a Builder to get the correct BuildContext.
+              // Alternatively, you can create a new widget and Localizations.override
+              // will pass the updated BuildContext to the new widget.
+              child: Builder(
+                builder: (context) {
+                  // A toy example for an internationalized Material widget.
+
+                  return Column(
+                    children: [
+                      Text(
+                        LocaleKeys.gender_with_arg,
+                        style: TextStyle(
+                            color: Colors.green,
+                            fontSize: 19,
+                            fontWeight: FontWeight.bold),
+                      ).tr(
+                        args: ['aissat'],
+                        gender: _gender ? 'female' : 'male',
+                        context: context,
+                      ),
+                      Text(
+                        MaterialLocalizations.of(context)
+                            .selectYearSemanticsLabel,
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+            Localizations.override(
+              context: context,
+              locale: Locale('ru', 'RU'),
+              child: Builder(builder: (context) {
+                return Column(
+                  children: [
+                    Text(
+                      context.tr(
+                        LocaleKeys.gender,
+                        gender: _gender ? 'female' : 'male',
+                      ),
+                      style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AppDialog(
+                              context: context,
+                            );
+                          },
+                        );
+                      },
+                      child: Text("show dialog"),
+                    ),
+                  ],
+                );
+              }),
             ),
             Spacer(
               flex: 1,
@@ -171,6 +258,54 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: incrementCounter,
         child: Text('+1'),
       ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class AppDialog extends StatelessWidget {
+  BuildContext context;
+  AppDialog({
+    Key? key,
+    required this.context,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(
+        context.tr(
+          LocaleKeys.gender,
+          gender: 'male',
+        ),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            MaterialLocalizations.of(context).selectYearSemanticsLabel,
+          ),
+          Container(
+            width: 200,
+            height: 200,
+            child: CalendarDatePicker(
+              initialDate: DateTime.now(),
+              firstDate: DateTime(1900),
+              lastDate: DateTime(2100),
+              onDateChanged: (value) {},
+            ),
+          )
+        ],
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            // Close the dialog
+            Navigator.of(context).pop();
+          },
+          child: Text('OK'),
+        ),
+      ],
     );
   }
 }

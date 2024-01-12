@@ -215,6 +215,7 @@ extension BuildContextEasyLocalizationExtension on BuildContext {
       args: args,
       namedArgs: namedArgs,
       gender: gender,
+      context: this,
     );
   }
 

@@ -23,6 +23,9 @@ class EasyLocalizationController extends ChangeNotifier {
   Translations? _translations, _fallbackTranslations;
   Translations? get translations => _translations;
   Translations? get fallbackTranslations => _fallbackTranslations;
+  Map<Locale, Translations>? _localeTranslationsMap;
+  Map<Locale, Translations>? get localeTranslationsMap =>
+      _localeTranslationsMap;
 
   EasyLocalizationController({
     required List<Locale> supportedLocales,

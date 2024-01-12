@@ -5,6 +5,7 @@ import 'plural_rules.dart';
 import 'translations.dart';
 
 class Localization {
+  Map<Locale, Translations>? localeTranslationsMap = {};
   Translations? _translations, _fallbackTranslations;
   late Locale _locale;
 
@@ -26,23 +27,44 @@ class Localization {
   static Localization? of(BuildContext context) =>
       Localizations.of<Localization>(context, Localization);
 
+  static void updateLocaleTranslationsMap({
+    required Map<Locale, Map<String, dynamic>> localeDataMap,
+  }) {
+    final Map<Locale, Translations> localeTranslationsMap = {};
+    localeDataMap.forEach((key, value) {
+      localeTranslationsMap[key] = Translations(Map.from(value));
+    });
+    instance.localeTranslationsMap = localeTranslationsMap;
+  }
+
   static bool load(
     Locale locale, {
     Translations? translations,
     Translations? fallbackTranslations,
+    Map<Locale, Translations>? localeTranslationsMap,
   }) {
     instance._locale = locale;
     instance._translations = translations;
     instance._fallbackTranslations = fallbackTranslations;
+
     return translations == null ? false : true;
   }
 
   String tr(
     String key, {
+    BuildContext? context,
     List<String>? args,
     Map<String, String>? namedArgs,
     String? gender,
   }) {
+    if (instance.localeTranslationsMap != null) {
+      final currentLocale =
+          context == null ? instance._locale : Localizations.localeOf(context);
+
+      instance._translations = instance.localeTranslationsMap![currentLocale] ??
+          instance._translations;
+    }
+
     late String res;
 
     if (gender != null) {
@@ -134,11 +156,11 @@ class Localization {
     String? name,
     NumberFormat? format,
   }) {
-
     late String res;
 
     final pluralRule = _pluralRule(_locale.languageCode, value);
-    final pluralCase = pluralRule != null ? pluralRule() : _pluralCaseFallback(value);
+    final pluralCase =
+        pluralRule != null ? pluralRule() : _pluralCaseFallback(value);
 
     switch (pluralCase) {
       case PluralCase.ZERO:
@@ -181,7 +203,8 @@ class Localization {
     if (subKey == 'other') return _resolve('$key.other');
 
     final tag = '$key.$subKey';
-    var resource = _resolve(tag, logging: false, fallback: _fallbackTranslations != null);
+    var resource =
+        _resolve(tag, logging: false, fallback: _fallbackTranslations != null);
     if (resource == tag) {
       resource = _resolve('$key.other');
     }
@@ -210,7 +233,7 @@ class Localization {
     return resource;
   }
 
-  bool exists(String key){
+  bool exists(String key) {
     return _translations?.get(key) != null;
   }
 }
