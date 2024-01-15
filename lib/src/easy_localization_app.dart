@@ -111,8 +111,8 @@ class EasyLocalization extends StatefulWidget {
   /// Customizable logger
   static EasyLogger logger = EasyLogger(name: '🌎 Easy Localization');
 
-  ///
-  static Future<void> loadLocaleTranslationsMaData(
+  /// Localizations.override will take translations data from this map.
+  static Future<void> loadLocaleTranslationsMapData(
     Map<Locale, Map<String, dynamic>> localeTranslationsMap,
   ) async =>
       Localization.updateLocaleTranslationsMap(
