@@ -14,31 +14,34 @@ import 'public.dart' as ez;
 /// ```
 extension TextTranslateExtension on Text {
   /// {@macro tr}
-  Text tr(
-          {List<String>? args,
-          BuildContext? context,
-          Map<String, String>? namedArgs,
-          String? gender}) =>
+  Text tr({
+    List<String>? args,
+    BuildContext? context,
+    Map<String, String>? namedArgs,
+    String? gender,
+    Locale? locale,
+  }) =>
       Text(
-          ez.tr(
-            data ?? '',
-            context: context,
-            args: args,
-            namedArgs: namedArgs,
-            gender: gender,
-          ),
-          key: key,
-          style: style,
-          strutStyle: strutStyle,
-          textAlign: textAlign,
-          textDirection: textDirection,
+        ez.tr(
+          data ?? '',
+          context: context,
+          args: args,
+          namedArgs: namedArgs,
+          gender: gender,
           locale: locale,
-          softWrap: softWrap,
-          overflow: overflow,
-          textScaleFactor: textScaleFactor,
-          maxLines: maxLines,
-          semanticsLabel: semanticsLabel,
-          textWidthBasis: textWidthBasis);
+        ),
+        key: key,
+        style: style,
+        strutStyle: strutStyle,
+        textAlign: textAlign,
+        textDirection: textDirection,
+        softWrap: softWrap,
+        overflow: overflow,
+        textScaleFactor: textScaleFactor,
+        maxLines: maxLines,
+        semanticsLabel: semanticsLabel,
+        textWidthBasis: textWidthBasis,
+      );
 
   /// {@macro plural}
   Text plural(

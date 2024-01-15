@@ -83,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(LocaleKeys.title).tr(
-          context: context,
+          locale: Locale('de', 'DE'),
         ),
         actions: <Widget>[
           TextButton(
@@ -117,13 +117,11 @@ class _MyHomePageState extends State<MyHomePage> {
             ).tr(
               args: ['aissat'],
               gender: _gender ? 'female' : 'male',
-              context: context,
             ),
             Text(
               tr(
                 LocaleKeys.gender,
                 gender: _gender ? 'female' : 'male',
-                context: context,
               ),
               style: TextStyle(
                   color: Colors.grey.shade600,
