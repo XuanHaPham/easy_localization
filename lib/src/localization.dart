@@ -53,16 +53,20 @@ class Localization {
   String tr(
     String key, {
     BuildContext? context,
+    Locale? locale,
     List<String>? args,
     Map<String, String>? namedArgs,
     String? gender,
   }) {
+    Translations? translation;
     if (instance.localeTranslationsMap != null) {
-      final currentLocale =
-          context == null ? instance._locale : Localizations.localeOf(context);
+      final currentLocale = locale ??
+          (context == null
+              ? instance._locale
+              : Localizations.localeOf(context));
 
-      instance._translations = instance.localeTranslationsMap![currentLocale] ??
-          instance._translations;
+      translation =
+          instance.localeTranslationsMap![currentLocale] ?? _translations;
     }
 
     late String res;
@@ -70,7 +74,10 @@ class Localization {
     if (gender != null) {
       res = _gender(key, gender: gender);
     } else {
-      res = _resolve(key);
+      res = _resolve(
+        key,
+        translations: translation,
+      );
     }
 
     res = _replaceLinks(res);
@@ -211,8 +218,14 @@ class Localization {
     return resource;
   }
 
-  String _resolve(String key, {bool logging = true, bool fallback = true}) {
-    var resource = _translations?.get(key);
+  String _resolve(
+    String key, {
+    Translations? translations,
+    bool logging = true,
+    bool fallback = true,
+  }) {
+    final translation = translations ?? _translations;
+    var resource = translation?.get(key);
     if (resource == null) {
       if (logging) {
         EasyLocalization.logger.warning('Localization key [$key] not found');

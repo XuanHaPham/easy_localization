@@ -37,6 +37,7 @@ String tr(
   List<String>? args,
   Map<String, String>? namedArgs,
   String? gender,
+  Locale? locale,
 }) {
   return context != null
       ? Localization.of(context)!.tr(
@@ -45,12 +46,14 @@ String tr(
           args: args,
           namedArgs: namedArgs,
           gender: gender,
+          locale: locale,
         )
       : Localization.instance.tr(
           key,
           args: args,
           namedArgs: namedArgs,
           gender: gender,
+          locale: locale,
         );
 }
 
